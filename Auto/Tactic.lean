@@ -2,6 +2,7 @@ import Lean
 import Auto.Translation
 import Auto.Solver.SMT
 import Auto.HintDB
+import Auto.Embedding.TPTP
 open Lean Elab Tactic
 
 initialize
@@ -210,6 +211,7 @@ def runAuto (instrstx : TSyntax ``autoinstr) (lemmas : Array Lemma) (inhFacts : 
   | .none =>
     let afterReify (uvalids : Array UMonoFact) (uinhs : Array UMonoFact) : LamReif.ReifM Expr := (do
       let exportFacts ← LamReif.reifFacts uvalids
+      logInfo m!"{TPTP.encodeFacts exportFacts (← LamReif.getTyVal) (← LamReif.getVarVal)}"
       let exportInhs ← LamReif.reifInhabitations uinhs
       let exportFacts := exportFacts.map (Embedding.Lam.REntry.valid [])
       let exportFacts ← exportFacts.mapM LamReif.skolemizeMostIntoForall
