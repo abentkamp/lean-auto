@@ -47,11 +47,11 @@ def encodeLamTerm (t : LamTerm) (lamDepth := 0) : String :=
 
 def encodeFacts (facts : Array LamTerm) (tyVal : Array (Expr × Level)) (varVal : Array (Expr × Embedding.Lam.LamSort)) : String := Id.run do
   let sorts := tyVal.zipWithIndex.map fun (_, i) =>
-    s!"thf(a{i} ,type, s{i}: $tType).\n"
+    s!"thf(s{i}_type ,type, s{i}: $tType).\n"
   let types := varVal.zipWithIndex.map fun ((_, s), i) =>
-    s!"thf(a{i} ,type, a{i}: {encodeLamSort s}).\n"
+    s!"thf(a{i}_type ,type, a{i}: {encodeLamSort s}).\n"
   let facts := facts.zipWithIndex.map fun (t, i) => 
-    s!"thf(axiom1,axiom,{encodeLamTerm t}).\n"
+    s!"thf(axiom{i},axiom,{encodeLamTerm t}).\n"
   return s!"{String.join sorts.toList}\n\n{String.join types.toList}\n\n{String.join facts.toList}"
   
 
